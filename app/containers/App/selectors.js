@@ -18,7 +18,10 @@ const makeSelectError = () =>
   createSelector(selectGlobal, globalState => globalState.error);
 
 const makeSelectRepos = () =>
-  createSelector(selectGlobal, globalState => globalState.userDatarepositories);
+  createSelector(
+    selectGlobal,
+    globalState => globalState.userData.repositories,
+  );
 
 const makeSelectLocation = () =>
   createSelector(selectRouter, routerState => routerState.location);

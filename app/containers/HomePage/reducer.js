@@ -9,24 +9,24 @@
  * case YOUR_ACTION_CONSTANT:
  *   return state.set('yourStateVariable', true);
  */
-
+import { handleActions } from 'redux-actions';
 import update from 'immutability-helper';
-import { CHANGE_USERNAME } from './constants';
+import { changeUsername } from './actions';
 
 // The initial state of the App
 const initialState = {
   username: '',
 };
 
-function homeReducer(state = initialState, action) {
-  switch (action.type) {
-    case CHANGE_USERNAME:
+const homeReducer = handleActions(
+  {
+    [changeUsername](state, { payload }) {
       return update(state, {
-        username: { $set: action.name.replace(/@/gi, '') },
+        username: { $set: payload.replace(/@/gi, '') },
       });
-    default:
-      return state;
-  }
-}
+    },
+  },
+  initialState,
+);
 
 export default homeReducer;

@@ -4,7 +4,7 @@
 
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { LOAD_REPOS } from 'containers/App/constants';
-import { reposLoaded, repoLoadingError } from 'containers/App/actions';
+import { loadReposSuccess, loadReposError } from 'containers/App/actions';
 
 import request from 'utils/request';
 import { makeSelectUsername } from 'containers/HomePage/selectors';
@@ -20,9 +20,9 @@ export function* getRepos() {
   try {
     // Call our request helper (see 'utils/request')
     const repos = yield call(request, requestURL);
-    yield put(reposLoaded(repos, username));
+    yield put(loadReposSuccess({ repos, username }));
   } catch (err) {
-    yield put(repoLoadingError(err));
+    yield put(loadReposError(err));
   }
 }
 

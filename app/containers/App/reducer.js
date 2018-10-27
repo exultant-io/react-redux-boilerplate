@@ -5,14 +5,11 @@
  * application state.
  * To add a new action, add it to the switch statement in the reducer function
  *
- * Example:
- * case YOUR_ACTION_CONSTANT:
- *   return state.set('yourStateVariable', true);
  */
 
 import update from 'immutability-helper';
-import { LOAD_REPOS_SUCCESS, LOAD_REPOS, LOAD_REPOS_ERROR } from './constants';
-
+import { handleActions } from 'redux-actions';
+import { loadRepos, loadReposSuccess, loadReposError } from './actions';
 // The initial state of the App
 const initialState = {
   loading: false,
@@ -23,29 +20,31 @@ const initialState = {
   },
 };
 
-function appReducer(state = initialState, action) {
-  switch (action.type) {
-    case LOAD_REPOS:
+const appReducer = handleActions(
+  {
+    [loadRepos](state) {
       return update(state, {
         loading: { $set: true },
         error: { $set: false },
         userData: { repositories: { $set: false } },
       });
-    case LOAD_REPOS_SUCCESS:
+    },
+    [loadReposSuccess](state, { payload }) {
+      const { repos, username } = payload;
       return update(state, {
-        userData: { repositories: { $set: action.repos } },
+        userData: { repositories: { $set: repos } },
         loading: { $set: false },
-        currentUser: { $set: action.username },
+        currentUser: { $set: username },
       });
-
-    case LOAD_REPOS_ERROR:
+    },
+    [loadReposError](state, { payload }) {
       return update(state, {
-        error: { $set: action.error },
+        error: { $set: payload },
         loading: { $set: false },
       });
-    default:
-      return state;
-  }
-}
+    },
+  },
+  initialState,
+);
 
 export default appReducer;
